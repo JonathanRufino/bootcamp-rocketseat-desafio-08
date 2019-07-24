@@ -4,7 +4,7 @@ export default {
   accent: '#7150c1',
 
   primaryText: '#fff',
-  secondaryText: '#141419',
+  secondaryText: '#000',
   tertiaryText: '#333',
   accentText: '#fff',
 };
