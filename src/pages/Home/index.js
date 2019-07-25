@@ -24,7 +24,7 @@ import * as CartActions from '../../store/modules/cart/actions';
 
 class Home extends Component {
   static propTypes = {
-    addToCart: PropTypes.func.isRequired,
+    addToCartRequest: PropTypes.func.isRequired,
     amount: PropTypes.objectOf(PropTypes.number).isRequired,
   };
 
@@ -50,10 +50,10 @@ class Home extends Component {
     }
   }
 
-  handleAddToCard = product => {
-    const { addToCart } = this.props;
+  handleAddToCard = id => {
+    const { addToCartRequest } = this.props;
 
-    addToCart(product);
+    addToCartRequest(id);
   };
 
   render() {
@@ -75,7 +75,7 @@ class Home extends Component {
               <Title>{item.title}</Title>
               <Price>{item.priceFormatted}</Price>
 
-              <AddToCartButton onPress={() => this.handleAddToCard(item)}>
+              <AddToCartButton onPress={() => this.handleAddToCard(item.id)}>
                 <Cart>
                   <Icon name="add-shopping-cart" />
                   <CartCounter>{amount[item.id] || 0}</CartCounter>
