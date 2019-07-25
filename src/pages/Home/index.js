@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Alert } from 'react-native';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
   Container,
@@ -19,6 +21,10 @@ import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 
 class Home extends Component {
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+  };
+
   state = {
     products: [],
     loading: true,
@@ -41,6 +47,15 @@ class Home extends Component {
     }
   }
 
+  handleAddToCard = product => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'ADD_TO_CART',
+      product,
+    });
+  };
+
   render() {
     const { products, loading } = this.state;
 
@@ -59,7 +74,7 @@ class Home extends Component {
               <Title>{item.title}</Title>
               <Price>{item.priceFormatted}</Price>
 
-              <AddToCartButton>
+              <AddToCartButton onPress={() => this.handleAddToCard(item)}>
                 <Cart>
                   <Icon name="add-shopping-cart" />
                   <CartCounter>0</CartCounter>
@@ -75,8 +90,4 @@ class Home extends Component {
   }
 }
 
-Home.navigationOptions = {
-  title: 'Home',
-};
-
-export default Home;
+export default connect()(Home);
