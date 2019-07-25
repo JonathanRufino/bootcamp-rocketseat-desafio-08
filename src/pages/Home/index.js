@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Alert } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 
 import {
   Container,
@@ -19,10 +20,11 @@ import {
 } from './styles';
 import { formatPrice } from '../../util/format';
 import api from '../../services/api';
+import * as CartActions from '../../store/modules/cart/actions';
 
 class Home extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
+    addToCart: PropTypes.func.isRequired,
   };
 
   state = {
@@ -48,12 +50,9 @@ class Home extends Component {
   }
 
   handleAddToCard = product => {
-    const { dispatch } = this.props;
+    const { addToCart } = this.props;
 
-    dispatch({
-      type: 'ADD_TO_CART',
-      product,
-    });
+    addToCart(product);
   };
 
   render() {
@@ -90,4 +89,10 @@ class Home extends Component {
   }
 }
 
-export default connect()(Home);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Home);

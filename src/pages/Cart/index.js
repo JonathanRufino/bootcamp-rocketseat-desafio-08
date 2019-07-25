@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 
 import {
   Container,
@@ -23,8 +24,9 @@ import {
   Touchable,
 } from './styles';
 import { formatPrice } from '../../util/format';
+import * as CartActions from '../../store/modules/cart/actions';
 
-function Cart({ cart, dispatch }) {
+function Cart({ cart, removeFromCart }) {
   return (
     <Container>
       <Products
@@ -40,11 +42,7 @@ function Cart({ cart, dispatch }) {
                 <Price>{item.priceFormatted}</Price>
               </ProductDetails>
 
-              <Touchable
-                onPress={() =>
-                  dispatch({ type: 'REMOVE_FROM_CART', id: item.id })
-                }
-              >
+              <Touchable onPress={() => removeFromCart(item.id)}>
                 <Icon name="delete-forever" size={30} />
               </Touchable>
             </ProductInfo>
@@ -87,11 +85,17 @@ Cart.propTypes = {
       image: PropTypes.string,
     })
   ).isRequired,
-  dispatch: PropTypes.func.isRequired,
+  removeFromCart: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   cart: state.cart,
 });
 
-export default connect(mapStateToProps)(Cart);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Cart);
