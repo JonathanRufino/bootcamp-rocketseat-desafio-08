@@ -22,24 +22,24 @@ export const Product = styled.View`
   border-radius: 4px;
   padding: 10px;
   margin-right: 15px;
-  width: 250px;
+  width: 220px;
 `;
 
 export const Image = styled.Image.attrs({
   resizeMode: 'contain',
 })`
-  height: 250px;
+  height: 200px;
 `;
 
 export const Title = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   line-height: 20px;
   color: ${colors.tertiaryText};
-  margin: 5px 0 0 10px;
+  margin: 10px 0 0 10px;
 `;
 
 export const Price = styled.Text`
-  font-size: 24px;
+  font-size: 21px;
   font-weight: bold;
   margin: 5px 0 20px 10px;
   color: ${colors.secondaryText};

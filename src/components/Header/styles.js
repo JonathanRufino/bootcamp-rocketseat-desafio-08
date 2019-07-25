@@ -7,7 +7,7 @@ export const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 20px;
 `;
 
 export const Cart = styled.TouchableOpacity``;
