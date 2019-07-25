@@ -22,6 +22,9 @@ import {
   SubmitButton,
   SubmitButtonText,
   Touchable,
+  EmptyList,
+  EmptyListMessage,
+  EmptyListIcon,
 } from './styles';
 import { formatPrice } from '../../util/format';
 import * as CartActions from '../../store/modules/cart/actions';
@@ -40,6 +43,12 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
       <Products
         data={cart}
         keyExtractor={item => String(item.id)}
+        ListEmptyComponent={
+          <EmptyList>
+            <EmptyListIcon name="remove-shopping-cart" />
+            <EmptyListMessage>Seu carrinho está vazio</EmptyListMessage>
+          </EmptyList>
+        }
         renderItem={({ item }) => (
           <Product>
             <ProductInfo>
@@ -74,12 +83,16 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
         )}
       />
 
-      <Label>TOTAL</Label>
-      <Total>{total}</Total>
+      {cart.length > 0 && (
+        <>
+          <Label>TOTAL</Label>
+          <Total>{total}</Total>
 
-      <SubmitButton>
-        <SubmitButtonText>FINALIZAR PEDIDO</SubmitButtonText>
-      </SubmitButton>
+          <SubmitButton>
+            <SubmitButtonText>FINALIZAR PEDIDO</SubmitButtonText>
+          </SubmitButton>
+        </>
+      )}
     </Container>
   );
 }

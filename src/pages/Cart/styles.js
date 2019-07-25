@@ -117,3 +117,20 @@ export const SubmitButtonText = styled.Text`
 `;
 
 export const Touchable = styled.TouchableOpacity``;
+
+export const EmptyList = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
+
+export const EmptyListMessage = styled.Text`
+  font-size: 25px;
+  font-weight: bold;
+  color: ${colors.secondaryText};
+  margin-top: 20px;
+`;
+
+export const EmptyListIcon = styled(MIcon).attrs({
+  size: 60,
+  color: '#ddd',
+})``;
