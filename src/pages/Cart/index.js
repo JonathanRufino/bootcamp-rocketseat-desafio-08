@@ -26,7 +26,15 @@ import {
 import { formatPrice } from '../../util/format';
 import * as CartActions from '../../store/modules/cart/actions';
 
-function Cart({ cart, removeFromCart }) {
+function Cart({ cart, removeFromCart, updateAmount }) {
+  function increment(product) {
+    updateAmount(product.id, product.amount + 1);
+  }
+
+  function decrement(product) {
+    updateAmount(product.id, product.amount - 1);
+  }
+
   return (
     <Container>
       <Products
@@ -49,13 +57,13 @@ function Cart({ cart, removeFromCart }) {
 
             <Footer>
               <FooterActions>
-                <Touchable>
+                <Touchable onPress={() => decrement(item)}>
                   <Icon name="remove-circle-outline" />
                 </Touchable>
 
                 <Amount>{item.amount}</Amount>
 
-                <Touchable>
+                <Touchable onPress={() => increment(item)}>
                   <Icon name="add-circle-outline" />
                 </Touchable>
               </FooterActions>
@@ -86,6 +94,7 @@ Cart.propTypes = {
     })
   ).isRequired,
   removeFromCart: PropTypes.func.isRequired,
+  updateAmount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
