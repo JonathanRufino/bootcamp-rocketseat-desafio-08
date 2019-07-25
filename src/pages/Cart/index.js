@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
   Container,
@@ -22,28 +24,11 @@ import {
 } from './styles';
 import { formatPrice } from '../../util/format';
 
-export default function Cart() {
+function Cart({ cart }) {
   return (
     <Container>
       <Products
-        data={[
-          {
-            id: 1,
-            title: 'Tênis de Caminhada Leve Confortável',
-            price: 179.9,
-            image:
-              'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-            amount: 1,
-          },
-          {
-            id: 2,
-            title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-            price: 139.9,
-            image:
-              'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-            amount: 2,
-          },
-        ]}
+        data={cart}
         keyExtractor={item => String(item.id)}
         renderItem={({ item }) => (
           <Product>
@@ -52,7 +37,7 @@ export default function Cart() {
 
               <ProductDetails>
                 <Title>{item.title}</Title>
-                <Price>{formatPrice(item.price)}</Price>
+                <Price>{item.priceFormatted}</Price>
               </ProductDetails>
 
               <Touchable>
@@ -89,6 +74,19 @@ export default function Cart() {
   );
 }
 
-Cart.navigationOptions = {
-  title: 'Carrinho',
+Cart.propTypes = {
+  cart: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      price: PropTypes.number,
+      image: PropTypes.string,
+    })
+  ).isRequired,
 };
+
+const mapStateToProps = state => ({
+  cart: state.cart,
+});
+
+export default connect(mapStateToProps)(Cart);
