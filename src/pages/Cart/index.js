@@ -24,7 +24,7 @@ import {
 } from './styles';
 import { formatPrice } from '../../util/format';
 
-function Cart({ cart }) {
+function Cart({ cart, dispatch }) {
   return (
     <Container>
       <Products
@@ -40,7 +40,11 @@ function Cart({ cart }) {
                 <Price>{item.priceFormatted}</Price>
               </ProductDetails>
 
-              <Touchable>
+              <Touchable
+                onPress={() =>
+                  dispatch({ type: 'REMOVE_FROM_CART', id: item.id })
+                }
+              >
                 <Icon name="delete-forever" size={30} />
               </Touchable>
             </ProductInfo>
@@ -83,6 +87,7 @@ Cart.propTypes = {
       image: PropTypes.string,
     })
   ).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
