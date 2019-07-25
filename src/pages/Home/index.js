@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Alert } from 'react-native';
 
 import {
   Container,
@@ -12,51 +13,70 @@ import {
   Cart,
   Icon,
   CartCounter,
+  Loading,
 } from './styles';
 import { formatPrice } from '../../util/format';
+import api from '../../services/api';
 
-export default function Home() {
-  return (
-    <Container>
-      <ProductList
-        data={[
-          {
-            id: 1,
-            title: 'Tênis de Caminhada Leve Confortável',
-            price: 179.9,
-            image:
-              'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-          },
-          {
-            id: 2,
-            title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-            price: 139.9,
-            image:
-              'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-          },
-        ]}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => (
-          <Product>
-            <Image source={{ uri: item.image }} />
-            <Title>{item.title}</Title>
-            <Price>{formatPrice(item.price)}</Price>
+class Home extends Component {
+  state = {
+    products: [],
+    loading: true,
+  };
 
-            <AddToCartButton>
-              <Cart>
-                <Icon name="add-shopping-cart" />
-                <CartCounter>0</CartCounter>
-              </Cart>
+  async componentDidMount() {
+    try {
+      const response = await api.get('/products');
 
-              <AddToCartButtonText>ADICIONAR</AddToCartButtonText>
-            </AddToCartButton>
-          </Product>
-        )}
-      />
-    </Container>
-  );
+      const products = response.data.map(product => ({
+        ...product,
+        priceFormatted: formatPrice(product.price),
+      }));
+
+      this.setState({ products });
+    } catch (e) {
+      Alert.alert('Erro ao buscar produtos', e.toString());
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
+
+  render() {
+    const { products, loading } = this.state;
+
+    if (loading) {
+      return <Loading size="large" />;
+    }
+
+    return (
+      <Container>
+        <ProductList
+          data={products}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <Product>
+              <Image source={{ uri: item.image }} />
+              <Title>{item.title}</Title>
+              <Price>{item.priceFormatted}</Price>
+
+              <AddToCartButton>
+                <Cart>
+                  <Icon name="add-shopping-cart" />
+                  <CartCounter>0</CartCounter>
+                </Cart>
+
+                <AddToCartButtonText>ADICIONAR</AddToCartButtonText>
+              </AddToCartButton>
+            </Product>
+          )}
+        />
+      </Container>
+    );
+  }
 }
 
 Home.navigationOptions = {
   title: 'Home',
 };
+
+export default Home;

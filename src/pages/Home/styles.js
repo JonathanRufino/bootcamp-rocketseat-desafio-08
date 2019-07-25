@@ -78,3 +78,9 @@ export const AddToCartButtonText = styled.Text`
   color: ${colors.accentText};
   font-weight: bold;
 `;
+
+export const Loading = styled.ActivityIndicator.attrs({
+  color: colors.accent,
+})`
+  flex: 1;
+`;
