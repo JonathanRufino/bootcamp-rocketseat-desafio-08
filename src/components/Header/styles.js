@@ -34,3 +34,5 @@ export const CartCounter = styled.Text`
   color: ${colors.accentText};
   font-size: 10;
 `;
+
+export const Touchable = styled.TouchableOpacity``;
