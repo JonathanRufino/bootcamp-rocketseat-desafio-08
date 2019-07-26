@@ -4,8 +4,10 @@ import { RectButton } from 'react-native-gesture-handler';
 
 import colors from '../../styles/colors';
 
+export const Scroll = styled.ScrollView``;
+
 export const Container = styled.View`
-  margin: 20px 20px 0;
+  margin: 20px 20px;
   padding: 20px 15px 10px;
   background: ${colors.secondary};
   border-radius: 4px;
