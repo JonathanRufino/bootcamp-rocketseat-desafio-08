@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -22,74 +22,69 @@ import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 import * as CartActions from '../../store/modules/cart/actions';
 
-class Home extends Component {
-  static propTypes = {
-    addToCartRequest: PropTypes.func.isRequired,
-    amount: PropTypes.objectOf(PropTypes.number).isRequired,
-  };
+function Home({ amount, addToCartRequest }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  state = {
-    products: [],
-    loading: true,
-  };
-
-  async componentDidMount() {
-    try {
+  useEffect(() => {
+    async function loadProducts() {
       const response = await api.get('/products');
 
-      const products = response.data.map(product => ({
+      const productsResponse = response.data.map(product => ({
         ...product,
         priceFormatted: formatPrice(product.price),
       }));
 
-      this.setState({ products });
+      setProducts(productsResponse);
+    }
+
+    try {
+      loadProducts();
     } catch (e) {
       Alert.alert('Erro ao buscar produtos', e.toString());
     } finally {
-      this.setState({ loading: false });
+      setLoading(false);
     }
-  }
+  }, []);
 
-  handleAddToCard = id => {
-    const { addToCartRequest } = this.props;
-
+  function handleAddToCard(id) {
     addToCartRequest(id);
-  };
-
-  render() {
-    const { products, loading } = this.state;
-    const { amount } = this.props;
-
-    if (loading) {
-      return <Loading size="large" />;
-    }
-
-    return (
-      <Container>
-        <ProductList
-          data={products}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Product>
-              <Image source={{ uri: item.image }} />
-              <Title>{item.title}</Title>
-              <Price>{item.priceFormatted}</Price>
-
-              <AddToCartButton onPress={() => this.handleAddToCard(item.id)}>
-                <Cart>
-                  <Icon name="add-shopping-cart" />
-                  <CartCounter>{amount[item.id] || 0}</CartCounter>
-                </Cart>
-
-                <AddToCartButtonText>ADICIONAR</AddToCartButtonText>
-              </AddToCartButton>
-            </Product>
-          )}
-        />
-      </Container>
-    );
   }
+
+  if (loading) {
+    return <Loading size="large" />;
+  }
+
+  return (
+    <Container>
+      <ProductList
+        data={products}
+        keyExtractor={item => String(item.id)}
+        renderItem={({ item }) => (
+          <Product>
+            <Image source={{ uri: item.image }} />
+            <Title>{item.title}</Title>
+            <Price>{item.priceFormatted}</Price>
+
+            <AddToCartButton onPress={() => handleAddToCard(item.id)}>
+              <Cart>
+                <Icon name="add-shopping-cart" />
+                <CartCounter>{amount[item.id] || 0}</CartCounter>
+              </Cart>
+
+              <AddToCartButtonText>ADICIONAR</AddToCartButtonText>
+            </AddToCartButton>
+          </Product>
+        )}
+      />
+    </Container>
+  );
 }
+
+Home.propTypes = {
+  addToCartRequest: PropTypes.func.isRequired,
+  amount: PropTypes.objectOf(PropTypes.number).isRequired,
+};
 
 const mapStateToProps = state => ({
   amount: state.cart.reduce((amount, product) => {
