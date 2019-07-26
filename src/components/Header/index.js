@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Logo from '../../assets/images/logo.svg';
 import {
@@ -12,7 +12,9 @@ import {
   Touchable,
 } from './styles';
 
-function Header({ navigation, cartSize }) {
+function Header({ navigation }) {
+  const cartSize = useSelector(state => state.cart.length);
+
   function handleHomeNavigation() {
     const { routeName } = navigation.state;
 
@@ -46,15 +48,6 @@ Header.propTypes = {
       routeName: PropTypes.string,
     }),
   }).isRequired,
-  cartSize: PropTypes.number,
 };
 
-Header.defaultProps = {
-  cartSize: 0,
-};
-
-const mapStateToProps = state => ({
-  cartSize: state.cart.length,
-});
-
-export default connect(mapStateToProps)(Header);
+export default Header;
